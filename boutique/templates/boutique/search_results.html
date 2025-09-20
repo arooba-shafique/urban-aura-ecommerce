@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Search Results for "{{ query }}"</h2>
+
+{% if messages %}
+<div id="messages" class="mb-4 opacity-100 transition-opacity duration-500">
+    {% for message in messages %}
+        <p class="text-green-600 font-semibold">{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if products %}
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    {% for product in products %}
+    <div class="bg-white rounded shadow p-4 text-center">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="h-48 w-full object-cover mb-2">
+        <h3 class="font-semibold">{{ product.name }}</h3>
+        <p class="text-pink-600 font-bold">${{ product.price }}</p>
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'boutique:cart_add' product.id %}" method="post" class="inline-block mt-2">
+            {% csrf_token %}
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">
+                Add to Cart
+            </button>
+        </form>
+
+        <form action="{% url 'boutique:buy_now' %}" method="post" class="inline-block mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Buy Now
+            </button>
+        </form>
+        {% else %}
+        <a href="{% url 'boutique:login' %}?next={% url 'boutique:category_products' category.slug %}" 
+           class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2 inline-block mt-2">
+            Add to Cart
+        </a>
+        <a href="{% url 'boutique:login' %}?next={% url 'boutique:category_products' category.slug %}" 
+           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block mt-2">
+            Buy Now
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-gray-700">No products found matching your search.</p>
+{% endif %}
+
+{% endblock %}
+
+<script>
+   
+    setTimeout(function() {
+        const messages = document.getElementById('messages');
+        if (messages) {
+            messages.style.opacity = '0';
+            setTimeout(() => { messages.style.display = 'none'; }, 500);
+        }
+    }, 2000);
+</script>

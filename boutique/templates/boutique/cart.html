@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart - Urban Aura</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .bg-dark-brown { background-color: #3b2f2f; }
+    .bg-peach { background-color: #ffb68f; }
+    .hover\:bg-peach:hover { background-color: #ffb68f; }
+    .text-dark-gray { color: #4b3e36; }
+    .bg-muted-brown { background-color: #5a473d; }
+</style>
+</head>
+<body class="bg-beige-light font-sans">
+
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+  <div class="container mx-auto px-6 py-2 flex flex-wrap justify-between items-center">
+    <h1 class="text-2xl font-bold text-white">Urban Aura</h1>
+
+    <nav class="relative flex items-center space-x-4 flex-wrap mt-2 sm:mt-0">
+      <a href="{% url 'boutique:landing' %}" class="block px-4 py-1.5 text-white rounded-lg ">Home</a>
+
+      <div class="relative">
+        <button id="products-button" class="px-3 py-1.5 text-white rounded-lg  focus:outline-none">
+          Products
+          <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="products-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
+          <a href="{% url 'boutique:category_products' 'dresses' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Dresses</a>
+          <a href="{% url 'boutique:category_products' 'shoes' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Shoes</a>
+          <a href="{% url 'boutique:category_products' 'bags' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Bags</a>
+          <a href="{% url 'boutique:category_products' 'jewelry' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Jewelry</a>
+        </div>
+      </div>
+
+      <a href="{% url 'boutique:cart_view' %}" class="px-3 py-1.5 text-white rounded-lg ">Cart</a>
+
+      <form method="get" action="{% url 'boutique:search_products' %}" class="relative flex items-center">
+        <input type="text" name="q" placeholder="Search products..."
+               class="px-3 py-1.5 rounded-l-2xl border border-gray-300 focus:outline-none"
+               value="{{ request.GET.q }}">
+        <button type="submit" class="bg-muted-brown text-white px-4 py-2 rounded-r-lg hover:bg-peach">Search</button>
+      </form>
+
+      {% if user.is_authenticated %}
+      <div class="relative inline-block text-left">
+  
+        <button id="hamburger-button" class="flex flex-col justify-between w-6 h-6 focus:outline-none">
+          <span class="block h-0.5 w-full bg-white"></span>
+          <span class="block h-0.5 w-full bg-white"></span>
+          <span class="block h-0.5 w-full bg-white"></span>
+        </button>
+        <div id="hamburger-dropdown" class="hidden absolute right-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
+          <a href="{% url 'boutique:cart_view' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Cart</a>
+          <a href="{% url 'boutique:order_list' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Orders</a>
+          <form method="post" action="{% url 'boutique:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full text-left px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Logout</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+        <a href="{% url 'boutique:login' %}?next={% url 'boutique:landing' %}" class="px-3 py-1.5 text-white rounded-lg hover:bg-peach hover:text-dark-brown">Login</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const productsButton = document.getElementById('products-button');
+  const productsDropdown = document.getElementById('products-dropdown');
+  productsButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    productsDropdown.classList.toggle('hidden');
+  });
+  window.addEventListener('click', () => productsDropdown.classList.add('hidden'));
+
+  const hamburgerButton = document.getElementById('hamburger-button');
+  const hamburgerDropdown = document.getElementById('hamburger-dropdown');
+  if(hamburgerButton){
+    hamburgerButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hamburgerDropdown.classList.toggle('hidden');
+    });
+    window.addEventListener('click', () => hamburgerDropdown.classList.add('hidden'));
+  }
+</script>
+
+
+<script>
+  const productsButton = document.getElementById('products-button');
+  const productsDropdown = document.getElementById('products-dropdown');
+  productsButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    productsDropdown.classList.toggle('hidden');
+  });
+  window.addEventListener('click', () => productsDropdown.classList.add('hidden'));
+
+  const menuButton = document.getElementById('user-menu-button');
+  const dropdown = document.getElementById('user-dropdown');
+  if(menuButton){
+    menuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('hidden');
+    });
+    window.addEventListener('click', () => dropdown.classList.add('hidden'));
+  }
+</script>
+
+<section class="pt-28 max-w-7xl mx-auto px-6">
+  <h2 class="text-3xl font-bold mb-6 text-dark-gray">Your Cart</h2>
+
+  {% if cart.cart %}
+  <table class="w-full bg-white rounded-2xl shadow overflow-hidden">
+    <thead class="bg-dark-brown text-white">
+      <tr>
+        <th class="p-3 text-left">Product</th>
+        <th class="p-3 text-left">Image</th>
+        <th class="p-3 text-left">Quantity</th>
+        <th class="p-3 text-left">Price</th>
+        <th class="p-3 text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr class="border-b">
+        <td class="p-3 text-dark-gray font-semibold">{{ item.product.name }}</td>
+        <td class="p-3">
+          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded">
+        </td>
+        <td class="p-3">
+          <div class="flex items-center space-x-2">
+            <form method="post" action="{% url 'boutique:cart_update' item.product.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="decrease">
+              <button type="submit" class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">-</button>
+            </form>
+            <span>{{ item.quantity }}</span>
+            <form method="post" action="{% url 'boutique:cart_update' item.product.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="increase">
+              <button type="submit" class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">+</button>
+            </form>
+          </div>
+        </td>
+        <td class="p-3 text-dark-gray font-semibold">${{ item.total }}</td>
+        <td class="p-3">
+          <a href="{% url 'boutique:cart_remove' item.product.id %}" class="text-red-600 hover:text-red-800">Remove</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="mt-6 flex justify-between items-center">
+    <p class="text-xl font-bold text-dark-gray">Total: ${{ cart.get_total_price }}</p>
+    <a href="{% url 'boutique:checkout' %}" class="bg-muted-brown text-white px-4 py-2 rounded-r-lg hover:bg-peach">Checkout</a>
+  </div>
+
+  {% else %}
+    <p class="text-dark-gray">Your cart is empty.</p>
+  {% endif %}
+</section>
+
+</body>
+</html>

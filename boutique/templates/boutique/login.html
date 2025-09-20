@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Urban Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-dark-brown { background-color: #3b2f2f; }
+        .text-dark-gray { color: #4b3e36; }
+        .bg-beige-light { background-color: #f5f0eb; }
+    </style>
+</head>
+<body class="bg-beige-light min-h-screen flex flex-col">
+
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-white">Urban Aura</h1>
+    </div>
+</header>
+
+<section class="flex-grow flex items-center justify-center">
+    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md mx-4">
+        <h2 class="text-3xl font-bold mb-6 text-dark-gray text-center">Welcome Back</h2>
+        <p class="text-center text-gray-500 mb-8">Login to access your account and start shopping!</p>
+
+        <form method="post" action="{% url 'boutique:login' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <input type="text" name="username" placeholder="Enter your email or username"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dark-brown focus:outline-none mt-2">
+            </div>
+            <div class="mb-6">
+                <input type="password" name="password" placeholder="Enter your password"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dark-brown focus:outline-none mt-2">
+            </div>
+            <button type="submit" class="w-full bg-dark-brown hover:bg-gray-800 text-white py-3 rounded-xl font-semibold transition duration-300 mb-4">
+                Login
+            </button>
+        </form>
+
+        <div class="text-center">
+            <p class="text-gray-500">Don't have an account?</p>
+            <a href="{% url 'boutique:register' %}" class="text-dark-brown hover:text-gray-800 font-semibold mt-2 inline-block">
+                Register here
+            </a>
+        </div>
+    </div>
+</section>
+
+
+
+</body>
+</html>

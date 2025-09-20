@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Urban Aura</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    .bg-dark-brown { background-color: #3b2f2f; }
+    .bg-peach { background-color: #ffb68f; }
+    .hover\:bg-peach:hover { background-color: #ffb68f; }
+    .text-dark-gray { color: #4b3e36; }
+    .bg-muted-brown { background-color: #5a473d; }
+</style>
+</head>
+<body class="bg-white font-sans">
+
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+  <div class="container mx-auto px-6 py-2 flex flex-wrap justify-between items-center">
+    <h1 class="text-2xl font-bold text-white">Urban Aura</h1>
+
+    <nav class="relative flex items-center space-x-4 flex-wrap mt-2 sm:mt-0">
+      <a href="{% url 'boutique:landing' %}" class="block px-4 py-1.5 text-white rounded-lg ">Home</a>
+
+      <div class="relative">
+        <button id="products-button" class="px-3 py-1.5 text-white rounded-lg  focus:outline-none">
+          Products
+          <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <div id="products-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
+          <a href="{% url 'boutique:category_products' 'dresses' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Dresses</a>
+          <a href="{% url 'boutique:category_products' 'shoes' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Shoes</a>
+          <a href="{% url 'boutique:category_products' 'bags' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Bags</a>
+          <a href="{% url 'boutique:category_products' 'jewelry' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Jewelry</a>
+        </div>
+      </div>
+
+      <a href="{% url 'boutique:cart_view' %}" class="px-3 py-1.5 text-white rounded-lg ">Cart</a>
+
+      <form method="get" action="{% url 'boutique:search_products' %}" class="relative flex items-center">
+        <input type="text" name="q" placeholder="Search products..." class="px-3 py-1.5 rounded-l-2xl border border-gray-300 focus:outline-none" value="{{ request.GET.q }}">
+        <button type="submit" class="bg-muted-brown text-white px-4 py-2 rounded-r-lg hover:bg-peach">Search</button>
+      </form>
+
+      {% if user.is_authenticated %}
+      <div class="relative inline-block text-left">
+        <button id="user-menu-button" class="px-3 py-1.5 text-white rounded-lg hover:text-dark-brown focus:outline-none">
+          {{ user.username }}
+          <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2">
+          <a href="{% url 'boutique:cart_view' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Cart</a>
+          <a href="{% url 'boutique:order_list' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Orders</a>
+          <form method="post" action="{% url 'boutique:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full text-left px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Logout</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+        <a href="{% url 'boutique:login' %}?next={% url 'boutique:landing' %}" class="px-3 py-1.5 text-white rounded-lg hover:bg-peach hover:text-dark-brown">Login</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const productsButton = document.getElementById('products-button');
+  const productsDropdown = document.getElementById('products-dropdown');
+  const menuButton = document.getElementById('user-menu-button');
+  const dropdown = document.getElementById('user-dropdown');
+
+  document.addEventListener('click', (e) => {
+    if(productsButton && !productsButton.contains(e.target)) productsDropdown.classList.add('hidden');
+    if(menuButton && !menuButton.contains(e.target)) dropdown.classList.add('hidden');
+  });
+
+  if(productsButton){
+    productsButton.addEventListener('click', e => { e.stopPropagation(); productsDropdown.classList.toggle('hidden'); });
+  }
+
+  if(menuButton){
+    menuButton.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('hidden'); });
+  }
+</script>
+
+<section class="pt-28 max-w-4xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-6 text-dark-gray">Checkout</h2>
+
+    {% if cart %}
+    <div class="bg-white p-6 rounded-2xl shadow-md">
+        <table class="w-full table-auto mb-6">
+            <thead>
+                <tr class="bg-gray-100 rounded-2xl">
+                    <th class="px-4 py-2 text-left">Item</th>
+                    <th class="px-4 py-2 text-center">Quantity</th>
+                    <th class="px-4 py-2 text-right">Price</th>
+                    <th class="px-4 py-2 text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr class="border-b">
+                    <td class="px-4 py-2">{{ item.product.name }}</td>
+                    <td class="px-4 py-2 text-center">{{ item.quantity }}</td>
+                    <td class="px-4 py-2 text-right">${{ item.product.price }}</td>
+                    <td class="px-4 py-2 text-right">${{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% with shipping=5 %}
+        <div class="flex justify-between text-lg font-semibold mb-2">
+            <span>Subtotal:</span>
+            <span>${{ total_price }}</span>
+        </div>
+        <div class="flex justify-between text-lg font-semibold mb-2">
+            <span>Shipping:</span>
+            <span>${{ shipping }}</span>
+        </div>
+        <div class="flex justify-between text-xl font-bold border-t pt-2">
+            <span>Total Order Price:</span>
+            <span>${{ total_order_price }}</span>
+        </div>
+        {% endwith %}
+
+        <form action="{% url 'boutique:checkout' %}" method="post" class="mt-6 space-y-4">
+            {% csrf_token %}
+            <h3 class="text-xl font-semibold mb-2">Shipping Information</h3>
+            <input type="text" name="full_name" placeholder="Full Name" required class="w-full border p-2 rounded-lg">
+            <textarea name="address" placeholder="Address" required class="w-full border p-2 rounded-lg"></textarea>
+            <input type="text" name="city" placeholder="City" required class="w-full border p-2 rounded-lg">
+            <input type="text" name="postal_code" placeholder="Postal Code" required class="w-full border p-2 rounded-lg">
+            <input type="text" name="country" placeholder="Country" required class="w-full border p-2 rounded-lg">
+
+            <h3 class="text-xl font-semibold mt-4 mb-2">Payment Method</h3>
+            <select id="payment-method" name="payment_method" required class="w-full border p-2 rounded-lg">
+                <option value="">Select Payment Method</option>
+                <option value="CARD">Credit/Debit Card</option>
+                <option value="COD">Cash on Delivery</option>
+            </select>
+
+            <div id="credit-card-fields" class="hidden mt-4 space-y-2">
+                <input type="text" name="cardholder_name" placeholder="Cardholder Name" class="w-full border p-2 rounded-lg">
+                <input type="text" id="card-number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" class="w-full border p-2 rounded-lg">
+                <div class="flex gap-2">
+                    <input type="text" id="expiry-date" name="expiry_date" placeholder="MM/YY" maxlength="5" class="w-1/2 border p-2 rounded-lg">
+                    <input type="text" id="cvv" name="cvv" placeholder="CVV" maxlength="3" class="w-1/2 border p-2 rounded-lg">
+                </div>
+            </div>
+
+            <button type="submit" class="bg-dark-brown text-white px-6 py-3 rounded-lg hover:bg-pink-600 w-full">
+                Place Order
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <p class="text-center text-dark-gray">Your cart is empty.</p>
+    {% endif %}
+</section>
+
+<script>
+const paymentSelect = document.getElementById('payment-method');
+const cardFields = document.getElementById('credit-card-fields');
+paymentSelect.addEventListener('change', function() {
+    if (this.value === 'CARD') {
+        cardFields.classList.remove('hidden');
+        cardFields.querySelectorAll('input').forEach(input => input.required = true);
+    } else {
+        cardFields.classList.add('hidden');
+        cardFields.querySelectorAll('input').forEach(input => input.required = false);
+    }
+});
+const cardNumberInput = document.getElementById('card-number');
+cardNumberInput.addEventListener('input', function() {
+    let value = this.value.replace(/\D/g, '');
+    value = value.match(/.{1,4}/g)?.join(' ') || '';
+    this.value = value;
+});
+const expiryInput = document.getElementById('expiry-date');
+expiryInput.addEventListener('input', function() {
+    let value = this.value.replace(/\D/g,'');
+    if(value.length > 2) value = value.slice(0,2) + '/' + value.slice(2,4);
+    this.value = value;
+});
+const cvvInput = document.getElementById('cvv');
+cvvInput.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g,'').slice(0,3);
+});
+</script>
+
+</body>
+</html>

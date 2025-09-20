@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load math_filters %}
+
+{% block content %}
+<section class="pt-28 max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-6 text-dark-gray">Your Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="bg-white rounded-2xl shadow-md mb-6 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-dark-gray">
+                    Order #{{ order.id }}
+                </h3>
+                <span class="text-gray-500 text-sm">{{ order.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[600px] bg-white rounded-2xl shadow overflow-hidden">
+                    <thead class="bg-dark-brown text-white">
+                        <tr>
+                            <th class="p-3 text-center">Image</th>
+                            <th class="p-3 text-left">Product</th>
+                            <th class="p-3 text-center">Quantity</th>
+                            <th class="p-3 text-right">Price</th>
+                            <th class="p-3 text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderitem_set.all %}
+                        <tr class="border-b">
+                            <td class="p-3 text-center">
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover mx-auto rounded-lg">
+                            </td>
+                            <td class="p-3 text-dark-gray font-semibold">{{ item.product.name }}</td>
+                            <td class="p-3 text-center">{{ item.quantity }}</td>
+                            <td class="p-3 text-right text-dark-gray font-semibold">${{ item.product.price }}</td>
+                            <td class="p-3 text-right text-dark-gray font-semibold">${{ item.quantity|multiply:item.product.price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% with subtotal=order.orderitem_set.all|sum_total %}
+            <div class="mt-4 space-y-1">
+                <div class="flex justify-between text-lg font-semibold text-dark-gray">
+                    <span>Subtotal:</span>
+                    <span>${{ subtotal }}</span>
+                </div>
+                <div class="flex justify-between text-lg font-semibold text-dark-gray">
+                    <span>Shipping:</span>
+                    <span>${{ order.shipping_cost }}</span>
+                </div>
+                <div class="flex justify-between text-xl font-bold text-dark-gray border-t pt-2">
+                    <span>Total Price:</span>
+                    <span>${{ subtotal|add:order.shipping_cost }}</span>
+                </div>
+                <div class="flex justify-between text-lg text-dark-gray mt-1">
+                    <span>Payment Method:</span>
+                    <span>{{ order.get_payment_method_display }}</span>
+                </div>
+            </div>
+            {% endwith %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center mt-10">
+            <p class="text-dark-gray font-semibold">You have no orders yet.</p>
+            <a href="{% url 'boutique:landing' %}" class="mt-2 inline-block bg-peach text-white px-6 py-3 rounded-lg hover:bg-pink-600 font-semibold shadow-lg">
+                Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
