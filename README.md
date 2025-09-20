@@ -17,9 +17,3 @@ Urban Aura is a modern e-commerce platform built with Django.
 - **Frontend:** HTML, CSS (Tailwind), JavaScript
 - **Database:** SQLite (default, can be swapped with PostgreSQL/MySQL)
 - **Version Control:** Git & GitHub
-
-## GitHub Repository
-[Urban Aura Ecommerce](https://github.com/arooba-shafique/urban-aura-ecommerce)
-
-## Hashtags
-#UrbanAura #Ecommerce #Django #Python #WebDevelopment #FullStack #GitHubProjects #ResponsiveDesign #UIUX
