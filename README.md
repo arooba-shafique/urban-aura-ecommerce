@@ -1,19 +1,65 @@
 ![Urban Aura Ecommerce](https://raw.githubusercontent.com/arooba-shafique/urban-aura-ecommerce/main/images/thumbnail.png)
 
-# Urban Aura – E-commerce Website
 
-Urban Aura is a modern e-commerce platform built with Django.
+# 🛍️ Urban Aura Ecommerce
 
-## Features
-- Product browsing and categories
-- User authentication (login, signup)
-- Shopping cart and checkout flow
-- Payment gateway integration 
-- Responsive landing page with modern UI design
-- Scalable structure for future store expansion
+Urban Aura Ecommerce is a **Django-based e-commerce web application** that provides a simple and user-friendly online shopping experience. Users can browse products, view details, and interact with the store through a clean interface.
 
-## Tech Stack
-- **Backend:** Django (Python)
-- **Frontend:** HTML, CSS (Tailwind), JavaScript
-- **Database:** SQLite (default, can be swapped with PostgreSQL/MySQL)
-- **Version Control:** Git & GitHub
+---
+
+## 🛒 Features
+
+* Product listing with details
+* User authentication (login & signup)
+* Shopping cart functionality
+* Order placement workflow
+* Responsive design for multiple screen sizes
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend:** Python, Django
+* **Frontend:** HTML, CSS, JavaScript
+* **Database:** SQLite (default Django database)
+
+---
+
+## 📁 Project Structure
+
+```
+urban-aura-ecommerce/
+├── manage.py
+├── urban_aura/        # Django project settings
+├── store/             # Main ecommerce app
+├── templates/         # HTML templates
+├── static/            # CSS, JS, images
+└── README.md
+```
+
+---
+
+## 🚀 How to Run the Project
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/arooba-shafique/urban-aura-ecommerce.git
+```
+
+2. **Go to the project directory**
+
+```bash
+cd urban-aura-ecommerce
+```
+
+3. **Run the server**
+
+```bash
+python manage.py runserver
+```
+
+4. **Open in browser**
+
+```
+http://127.0.0.1:8000/
