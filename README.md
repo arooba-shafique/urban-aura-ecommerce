@@ -30,8 +30,8 @@ Urban Aura Ecommerce is a **Django-based e-commerce web application** that provi
 ```
 urban-aura-ecommerce/
 ├── manage.py
-├── urban_aura/        # Django project settings
-├── store/             # Main ecommerce app
+├── womenshop/        # Django project settings
+├── boutique/             # Main ecommerce app
 ├── templates/         # HTML templates
 ├── static/            # CSS, JS, images
 └── README.md
