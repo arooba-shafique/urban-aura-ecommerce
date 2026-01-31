@@ -20,7 +20,7 @@ Urban Aura Ecommerce is a **Django-based e-commerce web application** that provi
 ## 🛠️ Tech Stack
 
 * **Backend:** Python, Django
-* **Frontend:** HTML, CSS, JavaScript
+* **Frontend:** HTML, CSS, JavaScript, Tailwind CSS 
 * **Database:** SQLite (default Django database)
 
 ---
