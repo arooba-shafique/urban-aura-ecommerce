@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Aura </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        .bg-beige-light { background-color: #e6d5c3; }
+        .bg-peach { background-color: #ffb68f; }
+        .text-dark-gray { color: #4b3e36; }
+        .bg-dark-brown { background-color: #3b2f2f; }
+        .bg-muted-brown { background-color: #8b7d72; }
+        .hover\:bg-peach:hover { background-color: #ffb68f; }
+    </style>
+</head>
+<body class="bg-beige-light font-sans">
+
+<div id="messages" class="fixed top-5 right-5 z-50 space-y-2">
+    {% for message in messages %}
+        <div class="px-4 py-2 rounded shadow-md
+            {% if message.tags == 'success' %}bg-green-600 text-white{% elif message.tags == 'error' %}bg-red-600 text-white{% else %}bg-gray-600 text-white{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<section class="relative h-screen flex items-center justify-center bg-beige-light">
+    <div class="w-[1300px]">
+
+<header class="flex justify-between items-center bg-dark-brown px-6 py-3 rounded-t-3xl shadow-md w-full text-lg">
+    <h1 class="text-2xl font-bold text-white tracking-tight">Urban Aura</h1>
+    
+    <nav class="flex items-center space-x-6 font-semibold text-white">
+      <a href="{% url 'boutique:landing' %}" class="block px-4 py-1.5 text-white rounded-lg ">Home</a>
+        <a href="#categories" class="block px-4 py-1.5 text-white rounded-lg ">Products</a>
+        {% if user.is_authenticated %}
+      <a href="{% url 'boutique:cart_view' %}" class="px-3 py-1.5 text-white rounded-lg ">Cart</a>
+        {% else %}
+            <a href="{% url 'boutique:login' %}?next={% url 'boutique:cart_view' %}" class="px-3 py-1 hover:text-peach transition-colors duration-300">Cart</a>
+        {% endif %}
+    </nav>
+
+    <div class="flex items-center space-x-4">
+        <form method="get" action="{% url 'boutique:search_products' %}" class="flex">
+            <input type="text" name="q" placeholder="Search..." class="px-3 py-2 rounded-l-md border border-gray-300 focus:outline-none text-lg" value="{{ request.GET.q }}">
+<button type="submit" 
+   class="bg-muted-brown text-white px-4 py-2 rounded-r-md hover:bg-peach hover:text-dark-brown transition text-lg font-semibold">
+   Search
+</button>        </form>
+
+        {% if user.is_authenticated %}
+        <div class="relative inline-block text-left">
+            <button id="user-menu-button" class="text-white font-semibold hover:text-peach flex items-center space-x-1 focus:outline-none text-lg">
+                <span>Hi, {{ user.username }}</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md py-1 text-sm">
+          <a href="{% url 'boutique:cart_view' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Cart</a>
+          <a href="{% url 'boutique:order_list' %}" class="block px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Orders</a>
+                <form method="post" action="{% url 'boutique:logout' %}">
+                    {% csrf_token %}
+            <button type="submit" class="w-full text-left px-4 py-1.5 text-dark-gray rounded-lg hover:bg-peach hover:text-white">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+            <a href="{% url 'boutique:login' %}?next={% url 'boutique:landing' %}" class="text-white font-semibold hover:text-peach text-lg">Login</a>
+        {% endif %}
+    </div>
+</header>
+
+        <div class="bg-dark-brown rounded-b-3xl p-10 flex flex-col md:flex-row items-center justify-between shadow-xl -mt-2">
+            
+            <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                <h2 class="text-6xl font-extrabold mb-4 text-white tracking-wide" style="line-height:1.1;">
+                    Where <span class="text-peach">Style</span> Meets <span class="text-peach">Elegance</span>
+                </h2>
+                <p class="text-lg mb-6 text-gray-200">
+                    Discover the perfect blend of modern trends and timeless fashion with Urban Aura.
+                </p>
+               <a href="#categories" 
+   class="bg-peach hover:bg-dark-brown hover:text-white text-dark-brown px-6 py-3 rounded-lg font-semibold shadow-lg transition">
+   Shop Now
+</a>
+            </div>
+
+            <div class="w-full md:w-1/2 flex justify-end items-start">
+                <div class="bg-white p-3 rounded-2xl shadow-lg w-[450px] h-[500px] overflow-hidden">
+                    <img src="{% static 'boutique/images/hero-removebg-preview.jpg' %}" alt="Fashion Banner" class="w-full h-full object-cover rounded-xl">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="categories" class="flex justify-center py-16 bg-beige-light">
+    <div class="w-full max-w-[1600px] px-10 flex flex-col items-center gap-8">
+        <h2 class="text-3xl font-bold mb-6 text-center text-dark-gray">Shop by Category</h2>
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="w-72 bg-dark-brown rounded-2xl p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2">
+                <h3 class="text-white font-semibold text-lg mb-2">Dresses</h3>
+                <a href="{% url 'boutique:category_products' 'dresses' %}" class="group w-full">
+                    <img src="https://hustlenholla.com.pk/cdn/shop/files/Summer-1906.jpg?v=1754889996&width=533" 
+                         alt="Dresses" class="w-full h-48 object-cover rounded-lg group-hover:opacity-80">
+                </a>
+            </div>
+            <div class="w-72 bg-dark-brown rounded-2xl p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2">
+                <h3 class="text-white font-semibold text-lg mb-2">Shoes</h3>
+                <a href="{% url 'boutique:category_products' 'shoes' %}" class="group w-full">
+                    <img src="https://image.made-in-china.com/202f0j00aUdkRqoCbAzg/Ladies-Comfortable-Shoes-for-Summer.jpg" 
+                         alt="Shoes" class="w-full h-48 object-cover rounded-lg group-hover:opacity-80">
+                </a>
+            </div>
+            <div class="w-72 bg-dark-brown rounded-2xl p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2">
+                <h3 class="text-white font-semibold text-lg mb-2">Bags</h3>
+                <a href="{% url 'boutique:category_products' 'bags' %}" class="group w-full">
+                    <img src="https://spunkymart.pk/cdn/shop/files/sequin-parrty-clutch.jpg?v=1711017453" 
+                         alt="Bags" class="w-full h-48 object-cover rounded-lg group-hover:opacity-80">
+                </a>
+            </div>
+            <div class="w-72 bg-dark-brown rounded-2xl p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2">
+                <h3 class="text-white font-semibold text-lg mb-2">Jewelry</h3>
+                <a href="{% url 'boutique:category_products' 'jewelry' %}" class="group w-full">
+                    <img src="https://img.drz.lazcdn.com/g/kf/S22296d2c168f4ab4885ea442c455055e5.jpg_960x960q80.jpg_.webp" 
+                         alt="Jewelry" class="w-full h-48 object-cover rounded-lg group-hover:opacity-80">
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="flex justify-center py-16">
+    <div class="w-[1300px] p-10 flex flex-col items-center gap-8">
+        <h2 class="text-3xl font-bold mb-6 text-center text-dark-gray">Featured Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
+            {% for product in products %}
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition">
+                <a href="{% url 'boutique:product_detail' product.slug %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-64 h-64 object-cover mx-auto hover:opacity-90 transition duration-200">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-700">{{ product.name }}</h3>
+                    <p class="text-xl font-bold text-pink-600 mt-2">${{ product.price }}</p>
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'boutique:cart_add' product.id %}" method="post" class="inline-block mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-dark-brown text-white px-4 py-2 rounded hover:bg-[#d8bfa6] hover:text-dark-brown mr-2">
+                                Add to Cart
+                            </button>
+                       </form>
+                        <form action="{% url 'boutique:buy_now' %}" method="post" class="inline-block mt-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="bg-peach text-dark-brown px-4 py-2 rounded hover:bg-dark-brown hover:text-white transition">
+                                Buy Now
+                            </button>                        
+                        </form>
+                    {% else %}
+                        <a href="{% url 'boutique:login' %}?next={% url 'boutique:category_products' product.category.slug %}" class="bg-dark-brown text-white px-4 py-2 rounded hover:bg-peach mr-2 inline-block mt-2">Add to Cart</a>
+                        <a href="{% url 'boutique:login' %}?next={% url 'boutique:category_products' product.category.slug %}" class="bg-peach text-dark-brown px-4 py-2 rounded hover:bg-muted-brown inline-block mt-2">Buy Now</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <p>No products found in this category.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<footer class="flex justify-center py-12">
+    <div class="w-[1200px] bg-dark-brown rounded-2xl shadow-xl p-8 flex flex-col gap-8 items-center">
+        <h3 class="text-2xl font-bold text-white">Urban Aura</h3>
+        <p class="text-sm text-gray-300 text-center max-w-md">Your go-to hub for women’s fashion — handbags, heels & jewelry that define elegance.</p>
+        <div class="flex gap-6 text-2xl">
+            <a href="#" class="text-gray-300 hover:text-peach transition" aria-label="Facebook">
+                <i class="bx bxl-facebook-circle"></i>
+            </a>
+            <a href="#" class="text-gray-300 hover:text-peach transition" aria-label="Instagram">
+                <i class="bx bxl-instagram-alt"></i>
+            </a>
+            <a href="#" class="text-gray-300 hover:text-peach transition" aria-label="Twitter">
+                <i class="bx bxl-twitter"></i>
+            </a>
+        </div>
+        <p class="text-xs text-gray-400 text-center border-t border-gray-600 pt-4 w-full">&copy; 2025 Urban Aura. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    const userBtn = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    userBtn?.addEventListener('click', () => userDropdown.classList.toggle('hidden'));
+    setTimeout(() => {
+        const messages = document.getElementById('messages');
+        if (messages) {
+            messages.style.transition = "opacity 0.5s ease";
+            messages.style.opacity = 0;
+            setTimeout(() => { messages.remove(); }, 500);
+        }
+    }, 2000);
+</script>
+
+</body>
+</html>
