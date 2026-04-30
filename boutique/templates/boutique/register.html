@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Urban Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-beige-light { background-color: #e6d5c3; }
+        .bg-dark-brown { background-color: #3b2f2f; }
+        .bg-peach { background-color: #ffb68f; }
+        .text-peach { color: #ffb68f; }
+        .text-dark-gray { color: #4b3e36; }
+
+        .btn-primary {
+            background-color: #3b2f2f; color: white;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .btn-primary:hover { background-color: #ffb68f; color: #4b3e36; }
+
+        .btn-peach {
+            background-color: #ffb68f; color: #4b3e36;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .btn-peach:hover { background-color: #3b2f2f; color: white; }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #4b3e36;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: #ffb68f;
+            box-shadow: 0 0 0 3px rgba(255,182,143,0.3);
+        }
+        .form-input.error-field {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+        }
+
+        /* Password strength bar */
+        #strength-bar { transition: width 0.3s, background-color 0.3s; }
+    </style>
+</head>
+<body class="bg-beige-light font-sans min-h-screen">
+
+<!-- HEADER -->
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+        <h1 class="text-lg sm:text-2xl font-bold text-white">Urban Aura</h1>
+        <a href="{% url 'boutique:landing' %}" class="text-white hover:text-peach text-sm font-semibold transition">← Back to Home</a>
+    </div>
+</header>
+
+<!-- REGISTER SECTION -->
+<section class="min-h-screen flex items-center justify-center px-3 pt-20 pb-10">
+    <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 sm:p-10">
+
+        <!-- Title -->
+        <div class="text-center mb-6">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-dark-gray">Create Account</h2>
+            <p class="text-gray-500 text-sm mt-1">Join Urban Aura — it's free!</p>
+        </div>
+
+        <!-- Global non-field errors -->
+        {% if form.non_field_errors %}
+        <div class="bg-red-50 border border-red-300 rounded-xl p-3 mb-4">
+            {% for error in form.non_field_errors %}
+            <p class="text-red-600 text-sm flex items-center gap-1">
+                <span>⚠️</span> {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate class="space-y-4">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="flex flex-col gap-1">
+
+                <!-- Label with required star -->
+                <label class="font-semibold text-dark-gray text-sm">
+                    {{ field.label }}
+                    {% if field.field.required %}
+                        <span class="text-red-500 ml-0.5">*</span>
+                    {% endif %}
+                </label>
+
+                <!-- Input wrapper with icon for password fields -->
+                <div class="relative">
+                    {{ field }}
+
+                    <!-- Show/hide toggle for password fields -->
+                    {% if field.field.widget.input_type == 'password' %}
+                    <button type="button"
+                        onclick="togglePassword('{{ field.auto_id }}')"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-dark-gray transition text-xs font-semibold focus:outline-none"
+                        tabindex="-1">
+                        👁
+                    </button>
+                    {% endif %}
+                </div>
+
+                <!-- Password strength meter (only for main password field) -->
+                {% if field.html_name == 'password1' %}
+                <div class="mt-1">
+                    <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div id="strength-bar" class="h-full w-0 rounded-full"></div>
+                    </div>
+                    <p id="strength-label" class="text-xs mt-0.5 text-gray-400"></p>
+                </div>
+                {% endif %}
+
+                <!-- Field errors -->
+                {% if field.errors %}
+                <div class="bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                    {% for error in field.errors %}
+                    <p class="text-red-600 text-xs flex items-start gap-1">
+                        <span class="mt-0.5 shrink-0">❌</span>
+                        <span>{{ error }}</span>
+                    </p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Help text -->
+                {% if field.help_text %}
+                <p class="text-xs text-gray-400 leading-snug">{{ field.help_text }}</p>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+
+            <!-- Submit -->
+            <button type="submit" class="btn-peach w-full py-3 rounded-xl font-bold text-base mt-2 shadow">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Login link -->
+        <p class="mt-6 text-center text-gray-500 text-sm">
+            Already have an account?
+            <a href="{% url 'boutique:login' %}" class="text-dark-gray font-semibold hover:text-peach transition">Login here</a>
+        </p>
+
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-6 px-3">
+    <div class="max-w-5xl mx-auto bg-dark-brown rounded-2xl shadow-xl p-5 flex flex-col gap-3 items-center">
+        <h3 class="text-lg font-bold text-white">Urban Aura</h3>
+        <p class="text-xs text-gray-400 text-center border-t border-gray-600 pt-3 w-full">&copy; 2025 Urban Aura. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Apply form-input class to all Django-rendered inputs
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.classList.add('form-input');
+        // Mark fields with existing errors
+        const wrapper = el.closest('.flex.flex-col');
+        if (wrapper && wrapper.querySelector('.bg-red-50')) {
+            el.classList.add('error-field');
+        }
+    });
+
+    // Toggle password visibility
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        if (!input) return;
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Password strength meter
+    const password1 = document.getElementById('id_password1');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthLabel = document.getElementById('strength-label');
+
+    if (password1 && strengthBar && strengthLabel) {
+        password1.addEventListener('input', function () {
+            const val = this.value;
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+
+            const levels = [
+                { width: '0%',   color: '',          label: '' },
+                { width: '25%',  color: '#ef4444',   label: '⚠️ Weak' },
+                { width: '50%',  color: '#f97316',   label: '👌 Fair' },
+                { width: '75%',  color: '#eab308',   label: '✅ Good' },
+                { width: '100%', color: '#22c55e',   label: '💪 Strong' },
+            ];
+
+            const lvl = levels[score] || levels[0];
+            strengthBar.style.width = lvl.width;
+            strengthBar.style.backgroundColor = lvl.color;
+            strengthLabel.textContent = lvl.label;
+            strengthLabel.style.color = lvl.color;
+        });
+    }
+
+    // Real-time confirm password match indicator
+    const password2 = document.getElementById('id_password2');
+    if (password1 && password2) {
+        password2.addEventListener('input', function () {
+            if (this.value && this.value !== password1.value) {
+                this.classList.add('error-field');
+                this.classList.remove('form-input');
+            } else {
+                this.classList.remove('error-field');
+                this.classList.add('form-input');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

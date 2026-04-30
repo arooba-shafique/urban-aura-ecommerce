@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+*.log
+
+# Virtual Environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+static_root/
+
+# Environment variables
+.env
+*.env
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / Tailwind
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp.*
+.pnp.js
+package-lock.json
+yarn.lock
+
+# System
+.DS_Store
+Thumbs.db

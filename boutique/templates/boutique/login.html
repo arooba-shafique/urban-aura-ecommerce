@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Urban Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-beige-light { background-color: #e6d5c3; }
+        .bg-dark-brown { background-color: #3b2f2f; }
+        .bg-peach { background-color: #ffb68f; }
+        .text-peach { color: #ffb68f; }
+        .text-dark-gray { color: #4b3e36; }
+
+        .btn-peach {
+            background-color: #ffb68f;
+            color: #4b3e36;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .btn-peach:hover { background-color: #3b2f2f; color: white; }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: #4b3e36;
+            background: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: #ffb68f;
+            box-shadow: 0 0 0 3px rgba(255,182,143,0.3);
+        }
+    </style>
+</head>
+<body class="bg-beige-light font-sans min-h-screen flex flex-col">
+
+<!-- HEADER -->
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+        <h1 class="text-lg sm:text-2xl font-bold text-white">Urban Aura</h1>
+        <a href="{% url 'boutique:landing' %}" class="text-white hover:text-peach text-sm font-semibold transition">← Back to Home</a>
+    </div>
+</header>
+
+<!-- LOGIN SECTION -->
+<section class="flex-grow flex items-center justify-center px-3 pt-20 pb-10">
+    <div class="bg-white rounded-3xl shadow-xl w-full max-w-md p-6 sm:p-10">
+
+        <!-- Title -->
+        <div class="text-center mb-6">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-dark-gray">Welcome Back</h2>
+            <p class="text-gray-500 text-sm mt-1">Login to access your account and start shopping!</p>
+        </div>
+
+        <!-- Error messages -->
+        {% if form.errors or error %}
+        <div class="bg-red-50 border border-red-300 rounded-xl p-3 mb-4">
+            <p class="text-red-600 text-sm flex items-center gap-1">
+                <span>⚠️</span>
+                <span>Invalid username or password. Please try again.</span>
+            </p>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'boutique:login' %}?next={{ request.GET.next }}" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold text-dark-gray text-sm">
+                    Username <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="username" placeholder="Enter your username"
+                       class="form-input" required autocomplete="username">
+            </div>
+
+            <!-- Password -->
+            <div class="flex flex-col gap-1">
+                <label class="font-semibold text-dark-gray text-sm">
+                    Password <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <input type="password" name="password" id="login-password"
+                           placeholder="Enter your password"
+                           class="form-input pr-10" required autocomplete="current-password">
+                    <button type="button" onclick="togglePassword()"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-dark-gray transition text-xs font-semibold focus:outline-none"
+                            tabindex="-1">👁</button>
+                </div>
+            </div>
+
+            <!-- Submit — same peach button as register -->
+            <button type="submit" class="btn-peach w-full py-3 rounded-xl font-bold text-base mt-2 shadow">
+                Login
+            </button>
+        </form>
+
+        <!-- Register link -->
+        <p class="mt-6 text-center text-gray-500 text-sm">
+            Don't have an account?
+            <a href="{% url 'boutique:register' %}" class="text-dark-gray font-semibold hover:text-peach transition">Register here</a>
+        </p>
+
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-6 px-3">
+    <div class="max-w-5xl mx-auto bg-dark-brown rounded-2xl shadow-xl p-5 flex flex-col gap-3 items-center">
+        <h3 class="text-lg font-bold text-white">Urban Aura</h3>
+        <p class="text-xs text-gray-400 text-center border-t border-gray-600 pt-3 w-full">&copy; 2025 Urban Aura. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    function togglePassword() {
+        const input = document.getElementById('login-password');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
+
+</body>
+</html>

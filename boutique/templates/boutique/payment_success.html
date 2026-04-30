@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-2xl mx-auto text-center py-16">
+  <div class="text-6xl mb-4">✅</div>
+  <h1 class="text-3xl font-bold mb-2">Payment Successful!</h1>
+  <p class="text-gray-500 mb-6">Order #{{ order.id }} is confirmed and paid.</p>
+
+  <div class="bg-gray-50 rounded-xl p-6 text-left mb-6">
+    {% for item in order_items %}
+    <div class="flex justify-between py-2 border-b">
+      <span>{{ item.product.name }} × {{ item.quantity }}</span>
+      <span>${{ item.total_price }}</span>
+    </div>
+    {% endfor %}
+    <div class="flex justify-between py-2 text-gray-500">
+      <span>Shipping</span><span>${{ shipping }}</span>
+    </div>
+    <div class="flex justify-between py-2 font-bold text-lg">
+      <span>Total</span><span>${{ total }}</span>
+    </div>
+  </div>
+
+  <a href="{% url 'boutique:order_list' %}" class="bg-black text-white px-8 py-3 rounded-full">
+    View My Orders
+  </a>
+</div>
+{% endblock %}

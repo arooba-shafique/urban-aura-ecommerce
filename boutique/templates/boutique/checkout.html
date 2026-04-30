@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Urban Aura</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+    .bg-beige-light { background-color: #e6d5c3; }
+    .bg-dark-brown { background-color: #3b2f2f; }
+    .bg-peach { background-color: #ffb68f; }
+    .text-peach { color: #ffb68f; }
+    .text-dark-gray { color: #4b3e36; }
+    .bg-muted-brown { background-color: #8b7d72; }
+
+    .btn-primary {
+        background-color: #3b2f2f; color: white;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .btn-primary:hover { background-color: #ffb68f; color: #4b3e36; }
+
+    .btn-peach {
+        background-color: #ffb68f; color: #4b3e36;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .btn-peach:hover { background-color: #3b2f2f; color: white; }
+
+    .nav-link { color: white; transition: color 0.2s; }
+    .nav-link:hover { color: #ffb68f; }
+
+    .dropdown-link {
+        display: block; padding: 6px 16px; color: #4b3e36;
+        transition: background-color 0.2s, color 0.2s; border-radius: 0.5rem;
+    }
+    .dropdown-link:hover { background-color: #ffb68f; color: white; }
+
+    .form-input {
+        width: 100%; border: 1px solid #d1d5db; padding: 10px 14px;
+        border-radius: 0.5rem; font-size: 0.875rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+    .form-input:focus { border-color: #ffb68f; box-shadow: 0 0 0 3px rgba(255,182,143,0.25); }
+
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+</style>
+</head>
+<body class="bg-beige-light font-sans">
+
+<!-- FIXED HEADER -->
+<header class="bg-dark-brown shadow-md fixed w-full top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+    <div class="flex items-center justify-between gap-3">
+      <h1 class="text-lg sm:text-2xl font-bold text-white shrink-0">Urban Aura</h1>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden sm:flex items-center gap-2 sm:gap-4 font-semibold">
+        <a href="{% url 'boutique:landing' %}" class="nav-link px-3 py-1.5 rounded-lg text-sm sm:text-base">Home</a>
+        <div class="relative">
+          <button id="products-button" class="nav-link px-3 py-1.5 rounded-lg text-sm sm:text-base flex items-center gap-1 focus:outline-none">
+            Products
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="products-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
+            <a href="{% url 'boutique:category_products' 'dresses' %}" class="dropdown-link">Dresses</a>
+            <a href="{% url 'boutique:category_products' 'shoes' %}" class="dropdown-link">Shoes</a>
+            <a href="{% url 'boutique:category_products' 'bags' %}" class="dropdown-link">Bags</a>
+            <a href="{% url 'boutique:category_products' 'jewelry' %}" class="dropdown-link">Jewelry</a>
+          </div>
+        </div>
+        <a href="{% url 'boutique:cart_view' %}" class="nav-link px-3 py-1.5 rounded-lg text-sm sm:text-base">Cart</a>
+      </nav>
+
+      <!-- Desktop Search + User -->
+      <div class="hidden sm:flex items-center gap-2">
+        <form method="get" action="{% url 'boutique:search_products' %}" class="flex">
+          <input type="text" name="q" placeholder="Search..." class="px-3 py-1.5 rounded-l-md border border-gray-300 focus:outline-none text-sm w-28 sm:w-36" value="{{ request.GET.q }}">
+          <button type="submit" class="btn-primary px-3 py-1.5 rounded-r-md text-sm font-semibold">Search</button>
+        </form>
+        {% if user.is_authenticated %}
+        <div class="relative">
+          <button id="user-menu-button" class="nav-link font-semibold flex items-center gap-1 focus:outline-none text-sm sm:text-base">
+            <span>Hi, {{ user.username }}</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
+            <a href="{% url 'boutique:cart_view' %}" class="dropdown-link">Cart</a>
+            <a href="{% url 'boutique:order_list' %}" class="dropdown-link">Orders</a>
+            <form method="post" action="{% url 'boutique:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="dropdown-link w-full text-left">Logout</button>
+            </form>
+          </div>
+        </div>
+        {% else %}
+          <a href="{% url 'boutique:login' %}?next={% url 'boutique:landing' %}" class="nav-link font-semibold text-sm sm:text-base">Login</a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button id="hamburger" class="sm:hidden text-white focus:outline-none ml-auto" aria-label="Toggle menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="flex-col gap-2 mt-3 pb-1 sm:hidden">
+      <form method="get" action="{% url 'boutique:search_products' %}" class="flex w-full">
+        <input type="text" name="q" placeholder="Search..." class="px-3 py-2 rounded-l-md border border-gray-300 focus:outline-none text-sm flex-1" value="{{ request.GET.q }}">
+        <button type="submit" class="btn-primary px-3 py-2 rounded-r-md text-sm font-semibold">Search</button>
+      </form>
+      <a href="{% url 'boutique:landing' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Home</a>
+      <a href="{% url 'boutique:category_products' 'dresses' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Dresses</a>
+      <a href="{% url 'boutique:category_products' 'shoes' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Shoes</a>
+      <a href="{% url 'boutique:category_products' 'bags' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Bags</a>
+      <a href="{% url 'boutique:category_products' 'jewelry' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Jewelry</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'boutique:cart_view' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Cart</a>
+        <a href="{% url 'boutique:order_list' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Orders</a>
+        <form method="post" action="{% url 'boutique:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="nav-link block w-full text-left py-1.5 px-2 rounded text-sm">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'boutique:login' %}?next={% url 'boutique:landing' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<!-- CHECKOUT CONTENT -->
+<section class="pt-24 sm:pt-28 pb-16 max-w-4xl mx-auto px-3 sm:px-6">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-dark-gray">Checkout</h2>
+
+  {% if cart %}
+  <div class="flex flex-col lg:flex-row gap-6">
+
+    <!-- LEFT: Order Summary + Form -->
+    <div class="flex-1">
+
+      <!-- Order Summary -->
+      <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-6">
+        <h3 class="text-lg sm:text-xl font-semibold mb-4 text-dark-gray">Order Summary</h3>
+
+        <!-- Desktop Table -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full table-auto text-sm">
+            <thead>
+              <tr class="bg-gray-100 rounded-xl">
+                <th class="px-4 py-2 text-left text-dark-gray">Item</th>
+                <th class="px-4 py-2 text-center text-dark-gray">Qty</th>
+                <th class="px-4 py-2 text-right text-dark-gray">Price</th>
+                <th class="px-4 py-2 text-right text-dark-gray">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart %}
+              <tr class="border-b hover:bg-orange-50 transition">
+                <td class="px-4 py-2 text-dark-gray font-medium">{{ item.product.name }}</td>
+                <td class="px-4 py-2 text-center text-dark-gray">{{ item.quantity }}</td>
+                <td class="px-4 py-2 text-right text-dark-gray">${{ item.product.price }}</td>
+                <td class="px-4 py-2 text-right font-semibold text-pink-600">${{ item.total|floatformat:2 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Item Cards -->
+        <div class="sm:hidden flex flex-col gap-2 mb-2">
+          {% for item in cart %}
+          <div class="flex justify-between items-center border-b pb-2">
+            <div>
+              <p class="text-dark-gray font-medium text-sm">{{ item.product.name }}</p>
+              <p class="text-xs text-gray-500">Qty: {{ item.quantity }} × ${{ item.product.price }}</p>
+            </div>
+            <p class="font-bold text-pink-600 text-sm">${{ item.total|floatformat:2 }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Totals -->
+        <div class="mt-4 space-y-1.5 text-sm sm:text-base">
+          <div class="flex justify-between text-dark-gray">
+            <span>Subtotal</span>
+            <span>${{ total_price|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between text-dark-gray">
+            <span>Shipping</span>
+            <span>${{ shipping|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between font-bold text-base sm:text-lg border-t pt-2 text-dark-gray">
+            <span>Total</span>
+            <span class="text-pink-600">${{ total_order_price|floatformat:2 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6">
+        <form action="{% url 'boutique:checkout' %}" method="post" class="space-y-4">
+          {% csrf_token %}
+
+          <h3 class="text-lg sm:text-xl font-semibold text-dark-gray">Shipping Information</h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="text" name="full_name" placeholder="Full Name" required class="form-input">
+            <input type="text" name="city" placeholder="City" required class="form-input">
+          </div>
+          <textarea name="address" placeholder="Street Address" required rows="2" class="form-input resize-none"></textarea>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="text" name="postal_code" placeholder="Postal Code" required class="form-input">
+            <input type="text" name="country" placeholder="Country" required class="form-input">
+          </div>
+
+          <h3 class="text-lg sm:text-xl font-semibold text-dark-gray pt-2">Payment Method</h3>
+          <select id="payment-method" name="payment_method" required class="form-input">
+            <option value="">Select Payment Method</option>
+            <option value="CARD">💳 Credit/Debit Card (Stripe)</option>
+            <option value="COD">💵 Cash on Delivery</option>
+          </select>
+
+          <div id="card-info" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-blue-700 text-sm flex items-start gap-2">
+            <span class="text-lg">🔒</span>
+            <span>You'll be securely redirected to Stripe to enter your card details after placing the order.</span>
+          </div>
+
+          <button type="submit" class="btn-peach w-full py-3 rounded-xl font-bold text-base sm:text-lg mt-2 shadow">
+            Place Order
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  {% else %}
+  <div class="bg-white rounded-2xl shadow p-10 text-center">
+    <p class="text-dark-gray text-lg font-semibold mb-4">Your cart is empty.</p>
+    <a href="{% url 'boutique:landing' %}" class="btn-peach inline-block px-6 py-2.5 rounded-lg font-semibold">Start Shopping</a>
+  </div>
+  {% endif %}
+</section>
+
+<!-- FOOTER -->
+<footer class="py-8 sm:py-12 px-3 sm:px-4">
+  <div class="max-w-5xl mx-auto bg-dark-brown rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 items-center">
+    <h3 class="text-xl sm:text-2xl font-bold text-white">Urban Aura</h3>
+    <p class="text-xs sm:text-sm text-gray-300 text-center max-w-md">Your go-to hub for women's fashion — handbags, heels & jewelry that define elegance.</p>
+    <div class="flex gap-5 sm:gap-6 text-xl sm:text-2xl">
+      <a href="#" class="text-gray-300 hover:text-peach transition"><i class="bx bxl-facebook-circle"></i></a>
+      <a href="#" class="text-gray-300 hover:text-peach transition"><i class="bx bxl-instagram-alt"></i></a>
+      <a href="#" class="text-gray-300 hover:text-peach transition"><i class="bx bxl-twitter"></i></a>
+    </div>
+    <p class="text-xs text-gray-400 text-center border-t border-gray-600 pt-4 w-full">&copy; 2025 Urban Aura. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // Products dropdown
+  const productsBtn = document.getElementById('products-button');
+  const productsDD = document.getElementById('products-dropdown');
+  productsBtn?.addEventListener('click', (e) => { e.stopPropagation(); productsDD.classList.toggle('hidden'); });
+
+  // User dropdown
+  const userBtn = document.getElementById('user-menu-button');
+  const userDD = document.getElementById('user-dropdown');
+  userBtn?.addEventListener('click', (e) => { e.stopPropagation(); userDD.classList.toggle('hidden'); });
+
+  // Close all on outside click
+  document.addEventListener('click', () => {
+    productsDD?.classList.add('hidden');
+    userDD?.classList.add('hidden');
+  });
+
+  // Mobile hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+
+  // Payment method toggle
+  const paymentSelect = document.getElementById('payment-method');
+  const cardInfo = document.getElementById('card-info');
+  paymentSelect?.addEventListener('change', function () {
+    cardInfo.classList.toggle('hidden', this.value !== 'CARD');
+  });
+</script>
+
+</body>
+</html>

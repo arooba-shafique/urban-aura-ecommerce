@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="pt-24 sm:pt-28 pb-16 max-w-4xl mx-auto px-3 sm:px-6">
+
+  <!-- Header -->
+  <div class="mb-6 sm:mb-8">
+    <h2 class="text-2xl sm:text-3xl font-bold text-dark-gray">Order Summary</h2>
+    <p class="text-sm text-gray-500 mt-1">
+      Order <span class="font-semibold">#{{ order.id }}</span> &mdash;
+      Placed on <span class="font-semibold">{{ order.created_at|date:"M d, Y H:i" }}</span>
+    </p>
+  </div>
+
+  <!-- Items Table -->
+  <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-4 sm:mb-6">
+    <!-- Desktop table (hidden on mobile) -->
+    <table class="hidden sm:table min-w-full divide-y divide-gray-200">
+      <thead class="bg-dark-brown">
+        <tr>
+          <th class="px-5 py-3 text-left text-sm font-semibold text-white">Product</th>
+          <th class="px-5 py-3 text-right text-sm font-semibold text-white">Qty</th>
+          <th class="px-5 py-3 text-right text-sm font-semibold text-white">Price</th>
+          <th class="px-5 py-3 text-right text-sm font-semibold text-white">Total</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for item in order_items %}
+        <tr class="hover:bg-beige-light transition">
+          <td class="px-5 py-3 text-dark-gray font-medium">{{ item.product.name }}</td>
+          <td class="px-5 py-3 text-right text-gray-600">{{ item.quantity }}</td>
+          <td class="px-5 py-3 text-right text-gray-600">${{ item.product.price }}</td>
+          <td class="px-5 py-3 text-right font-semibold text-pink-600">${{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Mobile cards (visible on mobile only) -->
+    <div class="sm:hidden divide-y divide-gray-100">
+      {% for item in order_items %}
+      <div class="p-4 flex justify-between items-start gap-3">
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-dark-gray text-sm truncate">{{ item.product.name }}</p>
+          <p class="text-xs text-gray-400 mt-0.5">Qty: {{ item.quantity }} &times; ${{ item.product.price }}</p>
+        </div>
+        <p class="font-bold text-pink-600 text-sm shrink-0">${{ item.total_price }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Totals -->
+  <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-6">
+    <div class="flex justify-between text-sm text-gray-600 mb-2">
+      <span>Subtotal</span>
+      <span class="font-semibold text-dark-gray">${{ subtotal }}</span>
+    </div>
+    <div class="flex justify-between text-sm text-gray-600 mb-3 pb-3 border-b border-gray-100">
+      <span>Shipping</span>
+      <span class="font-semibold text-dark-gray">${{ shipping }}</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="text-base sm:text-lg font-bold text-dark-gray">Total</span>
+      <span class="text-lg sm:text-xl font-bold text-pink-600">${{ total }}</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="text-center">
+    <a href="{% url 'boutique:landing' %}"
+       class="btn-primary inline-block px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold">
+      Continue Shopping
+    </a>
+  </div>
+
+</section>
+{% endblock %}
