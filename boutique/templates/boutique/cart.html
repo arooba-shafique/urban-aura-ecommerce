@@ -164,7 +164,7 @@
         <tr class="border-b hover:bg-orange-50 transition">
           <td class="p-3 text-dark-gray font-semibold text-sm">{{ item.product.name }}</td>
           <td class="p-3">
-            <img src="{% static 'boutique/images/products/' %}{{ item.product.image.name|cut:'products/' }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded-lg">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded-lg">
           </td>
           <td class="p-3">
             <div class="flex items-center space-x-2">
@@ -195,7 +195,7 @@
   <div class="sm:hidden flex flex-col gap-3">
     {% for item in cart %}
     <div class="bg-white rounded-2xl shadow p-3 flex gap-3 items-start">
-      <img src="{% static 'boutique/images/products/' %}{{ item.product.image.name|cut:'products/' }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-xl shrink-0">
+      <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-xl shrink-0">
       <div class="flex-1">
         <p class="font-semibold text-dark-gray text-sm">{{ item.product.name }}</p>
         <p class="text-pink-600 font-bold text-sm mt-0.5">${{ item.total }}</p>

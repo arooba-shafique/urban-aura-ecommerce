@@ -79,7 +79,6 @@
             </svg>
           </button>
           <div id="products-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white shadow-xl rounded-2xl py-2 z-50">
-            <a href="{% url 'boutique:landing' %}" class="dropdown-link">All</a>
             <a href="{% url 'boutique:category_products' 'dresses' %}" class="dropdown-link">Dresses</a>
             <a href="{% url 'boutique:category_products' 'shoes' %}" class="dropdown-link">Shoes</a>
             <a href="{% url 'boutique:category_products' 'bags' %}" class="dropdown-link">Bags</a>
@@ -132,7 +131,6 @@
         <button type="submit" class="btn-primary px-3 py-2 rounded-r-md text-sm font-semibold">Search</button>
       </form>
       <a href="{% url 'boutique:landing' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Home</a>
-      <a href="{% url 'boutique:landing' %}" class="nav-link block py-1.5 px-2 rounded text-sm">All Products</a>
       <a href="{% url 'boutique:category_products' 'dresses' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Dresses</a>
       <a href="{% url 'boutique:category_products' 'shoes' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Shoes</a>
       <a href="{% url 'boutique:category_products' 'bags' %}" class="nav-link block py-1.5 px-2 rounded text-sm">Bags</a>
@@ -168,7 +166,7 @@
 
     <!-- Image -->
     <div class="w-full md:w-1/2">
-      <img src="{% static 'boutique/images/products/' %}{{ product.image.name|cut:'products/' }}"
+      <img src="{{ product.image.url }}"
            alt="{{ product.name }}"
            class="w-full h-64 sm:h-80 md:h-full object-cover">
     </div>

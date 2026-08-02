@@ -185,7 +185,7 @@
           {% for item in order.orderitem_set.all %}
           <tr class="hover:bg-beige-light transition">
             <td class="px-4 py-3 text-center">
-              <img src="{% static 'boutique/images/products/' %}{{ item.product.image.name|cut:'products/' }}" alt="{{ item.product.name }}"
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
                    class="w-14 h-14 object-cover mx-auto rounded-lg">
             </td>
             <td class="px-4 py-3 text-dark-gray font-semibold text-sm">{{ item.product.name }}</td>
@@ -201,7 +201,7 @@
       <div class="sm:hidden divide-y divide-gray-100">
         {% for item in order.orderitem_set.all %}
         <div class="flex items-center gap-3 px-4 py-3">
-          <img src="{% static 'boutique/images/products/' %}{{ item.product.image.name|cut:'products/' }}" alt="{{ item.product.name }}"
+          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
                class="w-14 h-14 object-cover rounded-lg shrink-0">
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-dark-gray text-sm truncate">{{ item.product.name }}</p>

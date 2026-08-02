@@ -170,7 +170,7 @@
 
       <!-- Image -->
       <a href="{% url 'boutique:product_detail' product.slug %}" class="block">
-        <img src="{% static 'boutique/images/products/' %}{{ product.image.name|cut:'products/' }}"
+        <img src="{{ product.image.url }}"
              alt="{{ product.name }}"
              class="w-full h-40 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-300">
       </a>
