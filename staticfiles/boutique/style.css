@@ -1,0 +1,17 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #fff0f6;
+  color: #333;
+}
+h1 {
+  color: #d63384;
+}
+.products {
+  display: flex;
+  gap: 20px;
+}
+.product {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: white;
+}
