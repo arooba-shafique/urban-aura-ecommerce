@@ -40,11 +40,9 @@ def product_list(request):
 def category_products(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     products = Product.objects.filter(category=category)
-    categories = Category.objects.all()
     return render(request, "boutique/category_products.html", {
         "category": category,
         "products": products,
-        "categories": categories,
     })
 
 
