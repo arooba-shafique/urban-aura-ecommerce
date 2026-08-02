@@ -166,7 +166,7 @@
 
     <!-- Image -->
     <div class="w-full md:w-1/2">
-      <img src="{{ product.image.url }}"
+      <img src="{% static 'boutique/images/products/' %}{{ product.image.name|cut:'products/' }}"
            alt="{{ product.name }}"
            class="w-full h-64 sm:h-80 md:h-full object-cover">
     </div>
