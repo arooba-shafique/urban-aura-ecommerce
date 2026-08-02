@@ -161,6 +161,20 @@
     <p class="text-sm text-gray-500 mt-1">{{ products|length }} product{{ products|length|pluralize }} found</p>
   </div>
 
+  <!-- Category Filter Pills -->
+  <div class="flex flex-wrap gap-2 mb-6 sm:mb-8">
+    <a href="{% url 'boutique:landing' %}" class="px-4 py-2 rounded-full text-sm font-semibold transition bg-white text-dark-gray hover:bg-dark-brown hover:text-white shadow">
+      All
+    </a>
+    {% for cat in categories %}
+    <a href="{% url 'boutique:category_products' cat.slug %}"
+       class="px-4 py-2 rounded-full text-sm font-semibold transition shadow
+              {% if cat.slug == category.slug %}bg-dark-brown text-white{% else %}bg-white text-dark-gray hover:bg-dark-brown hover:text-white{% endif %}">
+      {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
   {% if products %}
   <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
     {% for product in products %}
