@@ -18,9 +18,16 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.http import HttpResponse
+
+def run_seed(request):
+    from django.core.management import call_command
+    call_command('seed_products')
+    return HttpResponse("Products seeded! <a href='/'>Back to home</a>")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('seed/', run_seed),
     path('', include('boutique.urls')),
 ]
 
