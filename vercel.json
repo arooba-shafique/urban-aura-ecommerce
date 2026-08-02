@@ -7,15 +7,7 @@
   ],
   "routes": [
     {
-      "src": "/media/(.*)",
-      "dest": "/public/media/$1"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/public/static/$1"
-    },
-    {
-      "src": "/(.*)",
+      "src": "/((?!media/|static/).*)",
       "dest": "/api/index.py"
     }
   ]
