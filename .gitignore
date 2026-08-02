@@ -18,9 +18,9 @@ venv.bak/
 
 # Django
 db.sqlite3
-media/
-staticfiles/
-static_root/
+/media/
+/staticfiles/
+/static_root/
 
 # Environment variables
 .env
