@@ -17,15 +17,6 @@ PRODUCTS = [
     },
     {
         "category": "dresses",
-        "name": "Velvet Twilight Dress",
-        "slug": "Velvet-Twilight-Dress",
-        "description": "Elegant black evening gown for formal occasions.",
-        "price": "34.99",
-        "stock": 15,
-        "image_url": "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400",
-    },
-    {
-        "category": "dresses",
         "name": "Casual Summer Dress",
         "slug": "casual-summer-dress",
         "description": "Light and breezy casual dress for everyday wear.",
