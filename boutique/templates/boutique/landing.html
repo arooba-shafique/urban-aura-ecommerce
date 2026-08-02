@@ -146,37 +146,19 @@
 <section id="categories" class="py-10 sm:py-16 bg-beige-light px-3 sm:px-4">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-dark-gray">Shop by Category</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            {% for cat, img in categories_with_images %}
-            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 lg:gap-8">
+            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2 {% if not selected_category %}ring-2 ring-peach{% endif %}">
+                <h3 class="text-white font-semibold text-sm sm:text-base lg:text-lg mb-2">All</h3>
+                <a href="{% url 'boutique:landing' %}" class="group w-full">
+                    <img src="{% static 'boutique/images/products/floral-maxi-dress.jpg' %}" alt="All Products" class="w-full h-28 sm:h-40 md:h-48 object-cover rounded-lg group-hover:opacity-80 transition">
+                </a>
+            </div>
+            {% for cat in categories %}
+            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:-translate-y-2 {% if selected_category == cat.slug %}ring-2 ring-peach{% endif %}">
                 <h3 class="text-white font-semibold text-sm sm:text-base lg:text-lg mb-2 capitalize">{{ cat.name }}</h3>
-                <a href="{% url 'boutique:category_products' cat.slug %}" class="group w-full">
-                    <img src="{{ cat.image_url }}" alt="{{ cat.name }}" class="w-full h-28 sm:h-40 md:h-48 object-cover rounded-lg group-hover:opacity-80 transition">
-                </a>
-            </div>
-            {% empty %}
-            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition">
-                <h3 class="text-white font-semibold text-sm sm:text-lg mb-2">Dresses</h3>
-                <a href="{% url 'boutique:category_products' 'dresses' %}" class="group w-full">
-                    <img src="https://hustlenholla.com.pk/cdn/shop/files/Summer-1906.jpg?v=1754889996&width=533" alt="Dresses" class="w-full h-28 sm:h-48 object-cover rounded-lg group-hover:opacity-80">
-                </a>
-            </div>
-            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition">
-                <h3 class="text-white font-semibold text-sm sm:text-lg mb-2">Shoes</h3>
-                <a href="{% url 'boutique:category_products' 'shoes' %}" class="group w-full">
-                    <img src="https://image.made-in-china.com/202f0j00aUdkRqoCbAzg/Ladies-Comfortable-Shoes-for-Summer.jpg" alt="Shoes" class="w-full h-28 sm:h-48 object-cover rounded-lg group-hover:opacity-80">
-                </a>
-            </div>
-            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition">
-                <h3 class="text-white font-semibold text-sm sm:text-lg mb-2">Bags</h3>
-                <a href="{% url 'boutique:category_products' 'bags' %}" class="group w-full">
-                    <img src="https://spunkymart.pk/cdn/shop/files/sequin-parrty-clutch.jpg?v=1711017453" alt="Bags" class="w-full h-28 sm:h-48 object-cover rounded-lg group-hover:opacity-80">
-                </a>
-            </div>
-            <div class="bg-dark-brown rounded-2xl p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition">
-                <h3 class="text-white font-semibold text-sm sm:text-lg mb-2">Jewelry</h3>
-                <a href="{% url 'boutique:category_products' 'jewelry' %}" class="group w-full">
-                    <img src="https://img.drz.lazcdn.com/g/kf/S22296d2c168f4ab4885ea442c455055e5.jpg_960x960q80.jpg_.webp" alt="Jewelry" class="w-full h-28 sm:h-48 object-cover rounded-lg group-hover:opacity-80">
+                <a href="{% url 'boutique:landing' %}?category={{ cat.slug }}" class="group w-full">
+                    <img src="{% static 'boutique/images/products/' %}{{ cat.name|lower }}-1.jpg" alt="{{ cat.name }}" class="w-full h-28 sm:h-40 md:h-48 object-cover rounded-lg group-hover:opacity-80 transition"
+                         onerror="this.src='{% static 'boutique/images/hero-removebg-preview.jpg' %}'">
                 </a>
             </div>
             {% endfor %}

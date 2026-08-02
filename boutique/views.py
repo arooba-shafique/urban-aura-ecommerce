@@ -19,8 +19,11 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def landing(request):
     categories = Category.objects.all()
-    products = Product.objects.all()[:8]
     selected_category = request.GET.get("category", "")
+    if selected_category:
+        products = Product.objects.filter(category__slug=selected_category)
+    else:
+        products = Product.objects.all()
     return render(request, "boutique/landing.html", {
         "categories": categories,
         "products": products,
@@ -40,9 +43,11 @@ def product_list(request):
 def category_products(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     products = Product.objects.filter(category=category)
+    categories = Category.objects.all()
     return render(request, "boutique/category_products.html", {
         "category": category,
         "products": products,
+        "categories": categories,
     })
 
 
